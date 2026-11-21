@@ -3,7 +3,7 @@
   <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="LazProjectMenu"/>
-    <Type Value="DesignTime"/>
+    <Type Value="RunAndDesignTime"/>
     <Author Value="Antigravity Team"/>
     <CompilerOptions>
       <Version Value="11"/>

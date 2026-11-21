@@ -36,10 +36,12 @@ O menu de contexto disponibiliza 18 acoes organizadas por grupos:
 
 ### Metodo 1: Pela interface grafica da IDE Lazarus
 1. No menu superior da IDE, clique em **Package** > **Open Package File (.lpk)...**
-2. Selecione o arquivo `LazProjectMenu.lpk` desta pasta.
-3. Na janela do gerenciador de pacotes, clique em **Compile**.
-4. Em seguida, clique em **Use** > **Install**.
-5. Confirme a reconstrucao da IDE quando solicitado. O Lazarus sera reiniciado automaticamente com o novo menu ativo.
+2. Selecione o arquivo `LazProjectMenu.lpk`.
+3. Na janela do gerenciador de pacotes, clique em **Use** > **Install** (ou em **Compile** se desejar compilar antes).
+4. O Lazarus solicitara a confirmacao para reconstruir a IDE. Clique em **Yes / Sim**.
+5. A IDE sera reconstruida e reiniciada automaticamente com o menu de contexto ativo no Project Inspector e no Project Groups!
+
+> **Nota:** Este pacote e do tipo `RunAndDesignTime`. Ele deve ser instalado na IDE (via **Use > Install**) e nao adicionado como dependencia em projetos comuns.
 
 ### Metodo 2: Pela linha de comando (lazbuild)
 ```bash
