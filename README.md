@@ -1,6 +1,6 @@
 # LazProjectMenu
 
-Pacote design-time para a IDE do Lazarus (Free Pascal / LCL) que adiciona um menu de contexto de alta produtividade inspirado no Project Manager / Project Group do Delphi.
+Pacote design-time para a IDE do Lazarus (Free Pascal / LCL) que adiciona um menu de contexto completo e produtivo de gerenciamento de projetos no Project Inspector e Project Groups.
 
 O menu e integrado nativamente tanto no **Project Inspector** quanto no **Project Groups** (`lazprojectgroups`).
 
@@ -52,5 +52,5 @@ lazbuild --build-ide=
 ## Estrutura dos Arquivos
 
 - `LazProjectMenu.lpk`: Definicao do pacote Lazarus.
-- `lazprojectmenu.pas`: Unidade de registro do pacote.
-- `udelphiprojectmenu.pas`: Implementacao dos hooks dinamicos e manipuladores do menu.
+- `lazprojectmenu.pas`: Unidade principal de registro do pacote.
+- `uprojectmenu.pas`: Implementacao dos comandos e hooks do menu de contexto.

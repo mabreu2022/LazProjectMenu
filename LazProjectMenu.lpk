@@ -12,14 +12,14 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Delphi-style Project Manager / Project Group context menu for Lazarus IDE"/>
+    <Description Value="Project Manager / Project Group context menu for Lazarus IDE"/>
     <License Value="MIT License"/>
     <Version Major="1" Minor="0" Release="0" Build="1"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="udelphiprojectmenu.pas"/>
+        <Filename Value="uprojectmenu.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="uDelphiProjectMenu"/>
+        <UnitName Value="uProjectMenu"/>
       </Item1>
     </Files>
     <RequiredPkgs Count="3">

@@ -1,4 +1,4 @@
-unit uDelphiProjectMenu;
+unit uProjectMenu;
 
 {$mode objfpc}{$H+}
 
@@ -21,7 +21,7 @@ type
     FTreeMenu: TPopupMenu;
     FTreeView: TTreeView;
     FOldPopup: TNotifyEvent;
-    // Delphi menu items in Project Group
+    // Context menu items in Project Group
     FMICompile: TMenuItem;
     FMIBuild: TMenuItem;
     FMIClean: TMenuItem;
@@ -76,8 +76,8 @@ type
     property TreeView: TTreeView read FTreeView write FTreeView;
   end;
 
-  { TDelphiProjectMenuManager: Coordinates Project Inspector & Project Groups }
-  TDelphiProjectMenuManager = class
+  { TProjectMenuManager: Coordinates Project Inspector & Project Groups }
+  TProjectMenuManager = class
   private
     class var FInitialized: Boolean;
     class var FProjInspMenuSectionBuild: TIDEMenuSection;
@@ -132,11 +132,11 @@ implementation
 
 procedure Register;
 begin
-  TDelphiProjectMenuManager.Initialize;
+  TProjectMenuManager.Initialize;
 end;
 
 { Helper function to create a TMenuItem with caption, icon and handler }
-function CreateDelphiMenuItem(AOwner: TComponent; const ACaption: string;
+function CreateProjectMenuItem(AOwner: TComponent; const ACaption: string;
   AOnClick: TNotifyEvent; const AImageName: string = ''): TMenuItem;
 begin
   Result := TMenuItem.Create(AOwner);
@@ -228,8 +228,8 @@ begin
   if FTreeMenu = nil then Exit;
 
   // If already hooked in the LFM or core, do not duplicate
-  if (FForm <> nil) and ((FForm.FindComponent('PMIDelphiCompile') <> nil) or (FForm.FindComponent('PMIBuild') <> nil)) then Exit;
-  if (FTreeMenu <> nil) and (FTreeMenu.FindComponent('PMIDelphiCompile') <> nil) then Exit;
+  if (FForm <> nil) and ((FForm.FindComponent('PMIProjCompile') <> nil) or (FForm.FindComponent('PMIBuild') <> nil)) then Exit;
+  if (FTreeMenu <> nil) and (FTreeMenu.FindComponent('PMIProjCompile') <> nil) then Exit;
 
   FOldPopup := FTreeMenu.OnPopup;
   FTreeMenu.OnPopup := @OnMenuPopup;
@@ -237,102 +237,102 @@ begin
   InsertIdx := 0;
 
   // 1-3. Compile, Build, Clean
-  FMICompile := CreateDelphiMenuItem(Self, 'Compile', @OnCompileClick, 'menu_build');
-  FMICompile.Name := 'PMIDelphiCompile';
+  FMICompile := CreateProjectMenuItem(Self, 'Compile', @OnCompileClick, 'menu_build');
+  FMICompile.Name := 'PMIProjCompile';
   AddItem(FMICompile);
 
-  FMIBuild := CreateDelphiMenuItem(Self, 'Build', @OnBuildClick, 'menu_build');
-  FMIBuild.Name := 'PMIDelphiBuild';
+  FMIBuild := CreateProjectMenuItem(Self, 'Build', @OnBuildClick, 'menu_build');
+  FMIBuild.Name := 'PMIProjBuild';
   AddItem(FMIBuild);
 
-  FMIClean := CreateDelphiMenuItem(Self, 'Clean', @OnCleanClick, 'menu_build_clean');
-  FMIClean.Name := 'PMIDelphiClean';
+  FMIClean := CreateProjectMenuItem(Self, 'Clean', @OnCleanClick, 'menu_build_clean');
+  FMIClean.Name := 'PMIProjClean';
   AddItem(FMIClean);
 
   // 4. Separator
-  FMISep1 := CreateDelphiMenuItem(Self, '-', nil);
+  FMISep1 := CreateProjectMenuItem(Self, '-', nil);
   AddItem(FMISep1);
 
   // 5-6. Run, Run Without Debugging
-  FMIRun := CreateDelphiMenuItem(Self, 'Run', @OnRunClick, 'menu_run');
-  FMIRun.Name := 'PMIDelphiRun';
+  FMIRun := CreateProjectMenuItem(Self, 'Run', @OnRunClick, 'menu_run');
+  FMIRun.Name := 'PMIProjRun';
   AddItem(FMIRun);
 
-  FMIRunWithoutDebug := CreateDelphiMenuItem(Self, 'Run Without Debugging', @OnRunWithoutDebugClick, 'menu_run');
-  FMIRunWithoutDebug.Name := 'PMIDelphiRunWithoutDebug';
+  FMIRunWithoutDebug := CreateProjectMenuItem(Self, 'Run Without Debugging', @OnRunWithoutDebugClick, 'menu_run');
+  FMIRunWithoutDebug.Name := 'PMIProjRunWithoutDebug';
   AddItem(FMIRunWithoutDebug);
 
   // 7. Separator
-  FMISep2 := CreateDelphiMenuItem(Self, '-', nil);
+  FMISep2 := CreateProjectMenuItem(Self, '-', nil);
   AddItem(FMISep2);
 
   // 8. Add...
-  FMIAdd := CreateDelphiMenuItem(Self, 'Add...', @OnAddFilesClick, 'laz_add');
-  FMIAdd.Name := 'PMIDelphiAdd';
+  FMIAdd := CreateProjectMenuItem(Self, 'Add...', @OnAddFilesClick, 'laz_add');
+  FMIAdd.Name := 'PMIProjAdd';
   AddItem(FMIAdd);
 
   // 9. Add New >
-  FMIAddNew := CreateDelphiMenuItem(Self, 'Add New', nil);
-  FMIAddNew.Name := 'PMIDelphiAddNew';
+  FMIAddNew := CreateProjectMenuItem(Self, 'Add New', nil);
+  FMIAddNew.Name := 'PMIProjAddNew';
 
-  FMIAddNewForm := CreateDelphiMenuItem(Self, 'Form', @OnNewFormClick, 'item_form');
+  FMIAddNewForm := CreateProjectMenuItem(Self, 'Form', @OnNewFormClick, 'item_form');
   FMIAddNew.Add(FMIAddNewForm);
 
-  FMIAddNewFrame := CreateDelphiMenuItem(Self, 'Frame', @OnNewFrameClick, 'item_frame');
+  FMIAddNewFrame := CreateProjectMenuItem(Self, 'Frame', @OnNewFrameClick, 'item_frame');
   FMIAddNew.Add(FMIAddNewFrame);
 
-  FMIAddNewDataModule := CreateDelphiMenuItem(Self, 'Data Module', @OnNewDataModuleClick, 'item_datamodule');
+  FMIAddNewDataModule := CreateProjectMenuItem(Self, 'Data Module', @OnNewDataModuleClick, 'item_datamodule');
   FMIAddNew.Add(FMIAddNewDataModule);
 
-  FMIAddNewUnit := CreateDelphiMenuItem(Self, 'Unit', @OnNewUnitClick, 'item_unit');
+  FMIAddNewUnit := CreateProjectMenuItem(Self, 'Unit', @OnNewUnitClick, 'item_unit');
   FMIAddNew.Add(FMIAddNewUnit);
 
-  FMISepAddNew := CreateDelphiMenuItem(Self, '-', nil);
+  FMISepAddNew := CreateProjectMenuItem(Self, '-', nil);
   FMIAddNew.Add(FMISepAddNew);
 
-  FMIAddNewOther := CreateDelphiMenuItem(Self, 'Other...', @OnNewOtherClick, 'laz_add');
+  FMIAddNewOther := CreateProjectMenuItem(Self, 'Other...', @OnNewOtherClick, 'laz_add');
   FMIAddNew.Add(FMIAddNewOther);
 
   AddItem(FMIAddNew);
 
   // 10. Separator
-  FMISep3 := CreateDelphiMenuItem(Self, '-', nil);
+  FMISep3 := CreateProjectMenuItem(Self, '-', nil);
   AddItem(FMISep3);
 
   // 11. Remove File...
-  FMIRemoveFile := CreateDelphiMenuItem(Self, 'Remove File...', @OnRemoveFileClick, 'laz_delete');
-  FMIRemoveFile.Name := 'PMIDelphiRemoveFile';
+  FMIRemoveFile := CreateProjectMenuItem(Self, 'Remove File...', @OnRemoveFileClick, 'laz_delete');
+  FMIRemoveFile.Name := 'PMIProjRemoveFile';
   AddItem(FMIRemoveFile);
 
   // 12. Remove Project
-  FMIRemoveProject := CreateDelphiMenuItem(Self, 'Remove Project', @OnRemoveProjectClick, 'laz_delete');
-  FMIRemoveProject.Name := 'PMIDelphiRemoveProject';
+  FMIRemoveProject := CreateProjectMenuItem(Self, 'Remove Project', @OnRemoveProjectClick, 'laz_delete');
+  FMIRemoveProject.Name := 'PMIProjRemoveProject';
   AddItem(FMIRemoveProject);
 
   // 13. Separator
-  FMISep4 := CreateDelphiMenuItem(Self, '-', nil);
+  FMISep4 := CreateProjectMenuItem(Self, '-', nil);
   AddItem(FMISep4);
 
   // 14-16. Save, Save As..., Rename
-  FMISave := CreateDelphiMenuItem(Self, 'Save', @OnSaveClick);
-  FMISave.Name := 'PMIDelphiSave';
+  FMISave := CreateProjectMenuItem(Self, 'Save', @OnSaveClick);
+  FMISave.Name := 'PMIProjSave';
   AddItem(FMISave);
 
-  FMISaveAs := CreateDelphiMenuItem(Self, 'Save As...', @OnSaveAsClick);
-  FMISaveAs.Name := 'PMIDelphiSaveAs';
+  FMISaveAs := CreateProjectMenuItem(Self, 'Save As...', @OnSaveAsClick);
+  FMISaveAs.Name := 'PMIProjSaveAs';
   AddItem(FMISaveAs);
 
-  FMIRename := CreateDelphiMenuItem(Self, 'Rename', @OnRenameClick);
-  FMIRename.Name := 'PMIDelphiRename';
+  FMIRename := CreateProjectMenuItem(Self, 'Rename', @OnRenameClick);
+  FMIRename.Name := 'PMIProjRename';
   AddItem(FMIRename);
 
   // 17. Separator
-  FMISep5 := CreateDelphiMenuItem(Self, '-', nil);
+  FMISep5 := CreateProjectMenuItem(Self, '-', nil);
   AddItem(FMISep5);
 
   // 18. Activate
-  FMIActivate := CreateDelphiMenuItem(Self, 'Activate', @OnActivateClick, 'pg_active');
-  FMIActivate.Name := 'PMIDelphiActivate';
+  FMIActivate := CreateProjectMenuItem(Self, 'Activate', @OnActivateClick, 'pg_active');
+  FMIActivate.Name := 'PMIProjActivate';
   AddItem(FMIActivate);
 end;
 
@@ -551,9 +551,9 @@ begin
   ExecuteActionByName('ATargetActivate');
 end;
 
-{ TDelphiProjectMenuManager }
+{ TProjectMenuManager }
 
-class procedure TDelphiProjectMenuManager.Initialize;
+class procedure TProjectMenuManager.Initialize;
 var
   AParent: TIDEMenuSection;
 begin
@@ -563,23 +563,23 @@ begin
   // 1. Hook Project Inspector popup menu via MenuIntf
   if ProjectInspectorItemsMenuRoot <> nil then
   begin
-    if ProjectInspectorItemsMenuRoot.FindByName('DelphiBuild') = nil then
+    if ProjectInspectorItemsMenuRoot.FindByName('ProjectMenuBuild') = nil then
     begin
       // 1. Build Section (Compile, Build, Clean)
-      FProjInspMenuSectionBuild := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'DelphiBuild');
+      FProjInspMenuSectionBuild := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'ProjectMenuBuild');
       AParent := FProjInspMenuSectionBuild;
       FProjInspMenuCompile := RegisterIDEMenuCommand(AParent, 'Compile', 'Compile', @DoCompileClick, nil, IDECommandList.FindIDECommand(ecCompile));
       FProjInspMenuBuild := RegisterIDEMenuCommand(AParent, 'Build', 'Build', @DoBuildClick, nil, IDECommandList.FindIDECommand(ecBuild));
       FProjInspMenuClean := RegisterIDEMenuCommand(AParent, 'Clean', 'Clean', @DoCleanClick, nil, IDECommandList.FindIDECommand(ecCleanUpAndBuild));
 
       // 2. Run Section (Run, Run Without Debugging)
-      FProjInspMenuSectionRun := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'DelphiRun');
+      FProjInspMenuSectionRun := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'ProjectMenuRun');
       AParent := FProjInspMenuSectionRun;
       FProjInspMenuRun := RegisterIDEMenuCommand(AParent, 'Run', 'Run', @DoRunClick, nil, IDECommandList.FindIDECommand(ecRun));
       FProjInspMenuRunWithoutDebugging := RegisterIDEMenuCommand(AParent, 'RunWithoutDebugging', 'Run Without Debugging', @DoRunWithoutDebugClick, nil, IDECommandList.FindIDECommand(ecRunWithoutDebugging));
 
       // 3. Add Section (Add..., Add New >)
-      FProjInspMenuSectionAdd := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'DelphiAdd');
+      FProjInspMenuSectionAdd := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'ProjectMenuAdd');
       AParent := FProjInspMenuSectionAdd;
       FProjInspMenuAddFiles := RegisterIDEMenuCommand(AParent, 'AddFiles', 'Add...', @DoAddFilesClick, nil, nil, 'laz_add');
       FProjInspMenuAddNew := RegisterIDESubMenu(AParent, 'AddNew', 'Add New');
@@ -591,12 +591,12 @@ begin
       FProjInspMenuAddNewOther := RegisterIDEMenuCommand(FProjInspMenuSectionAddNewOther, 'Other', 'Other...', @DoNewOtherClick, nil, IDECommandList.FindIDECommand(ecNew));
 
       // 4. Remove Section (Remove File...)
-      FProjInspMenuSectionRemove := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'DelphiRemove');
+      FProjInspMenuSectionRemove := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'ProjectMenuRemove');
       AParent := FProjInspMenuSectionRemove;
       FProjInspMenuRemoveFile := RegisterIDEMenuCommand(AParent, 'RemoveFile', 'Remove File...', @DoRemoveFileClick, nil, nil, 'laz_delete');
 
       // 5. Save Section (Save, Save As..., Rename)
-      FProjInspMenuSectionSave := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'DelphiSave');
+      FProjInspMenuSectionSave := RegisterIDEMenuSection(ProjectInspectorItemsMenuRoot, 'ProjectMenuSave');
       AParent := FProjInspMenuSectionSave;
       FProjInspMenuSave := RegisterIDEMenuCommand(AParent, 'Save', 'Save', @DoSaveClick, nil, IDECommandList.FindIDECommand(ecSaveProject));
       FProjInspMenuSaveAs := RegisterIDEMenuCommand(AParent, 'SaveAs', 'Save As...', @DoSaveAsClick, nil, IDECommandList.FindIDECommand(ecSaveProjectAs));
@@ -612,7 +612,7 @@ begin
   HookExistingProjectGroupEditors;
 end;
 
-class procedure TDelphiProjectMenuManager.OnProjectInspectorMenuShow(Sender: TObject);
+class procedure TProjectMenuManager.OnProjectInspectorMenuShow(Sender: TObject);
 var
   AForm: TCustomForm;
   TV: TTreeView;
@@ -653,34 +653,34 @@ begin
     FProjInspMenuSectionSave.Visible := HasProject and not IsDepSelected;
 end;
 
-class procedure TDelphiProjectMenuManager.OnScreenFormAdded(Sender: TObject; AForm: TCustomForm);
+class procedure TProjectMenuManager.OnScreenFormAdded(Sender: TObject; AForm: TCustomForm);
 begin
   if (AForm <> nil) and (AForm.ClassNameIs('TProjectGroupEditorForm') or (AForm.Name = 'ProjectGroupEditor')) then
     HookProjectGroupEditor(AForm);
 end;
 
-class procedure TDelphiProjectMenuManager.HookProjectGroupEditor(AForm: TCustomForm);
+class procedure TProjectMenuManager.HookProjectGroupEditor(AForm: TCustomForm);
 var
   PM: TPopupMenu;
   TV: TTreeView;
   HookObj: TPGEditorHook;
 begin
   if AForm = nil then Exit;
-  if AForm.FindComponent('DelphiPGHook') <> nil then Exit;
+  if AForm.FindComponent('PGMenuHook') <> nil then Exit;
 
   PM := AForm.FindComponent('PopupMenuTree') as TPopupMenu;
   TV := AForm.FindComponent('TVPG') as TTreeView;
   if PM = nil then Exit;
 
   HookObj := TPGEditorHook.Create(AForm);
-  HookObj.Name := 'DelphiPGHook';
+  HookObj.Name := 'PGMenuHook';
   HookObj.Form := AForm;
   HookObj.TreeMenu := PM;
   HookObj.TreeView := TV;
   HookObj.SetupMenu;
 end;
 
-class procedure TDelphiProjectMenuManager.HookExistingProjectGroupEditors;
+class procedure TProjectMenuManager.HookExistingProjectGroupEditors;
 var
   i: Integer;
   AForm: TCustomForm;
@@ -693,7 +693,7 @@ begin
   end;
 end;
 
-class procedure TDelphiProjectMenuManager.DoAddNewFile(const ADescName: string);
+class procedure TProjectMenuManager.DoAddNewFile(const ADescName: string);
 var
   Prj: TLazProject;
   Desc: TProjectFileDescriptor;
@@ -714,32 +714,32 @@ begin
   end;
 end;
 
-class procedure TDelphiProjectMenuManager.DoCompileClick(Sender: TObject);
+class procedure TProjectMenuManager.DoCompileClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecCompile);
 end;
 
-class procedure TDelphiProjectMenuManager.DoBuildClick(Sender: TObject);
+class procedure TProjectMenuManager.DoBuildClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecBuild);
 end;
 
-class procedure TDelphiProjectMenuManager.DoCleanClick(Sender: TObject);
+class procedure TProjectMenuManager.DoCleanClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecCleanUpAndBuild);
 end;
 
-class procedure TDelphiProjectMenuManager.DoRunClick(Sender: TObject);
+class procedure TProjectMenuManager.DoRunClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecRun);
 end;
 
-class procedure TDelphiProjectMenuManager.DoRunWithoutDebugClick(Sender: TObject);
+class procedure TProjectMenuManager.DoRunWithoutDebugClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecRunWithoutDebugging);
 end;
 
-class procedure TDelphiProjectMenuManager.DoAddFilesClick(Sender: TObject);
+class procedure TProjectMenuManager.DoAddFilesClick(Sender: TObject);
 var
   Prj: TLazProject;
   OpenDlg: TOpenDialog;
@@ -768,32 +768,32 @@ begin
   end;
 end;
 
-class procedure TDelphiProjectMenuManager.DoNewFormClick(Sender: TObject);
+class procedure TProjectMenuManager.DoNewFormClick(Sender: TObject);
 begin
   DoAddNewFile(FileDescNameLCLForm);
 end;
 
-class procedure TDelphiProjectMenuManager.DoNewFrameClick(Sender: TObject);
+class procedure TProjectMenuManager.DoNewFrameClick(Sender: TObject);
 begin
   DoAddNewFile(FileDescNameFrame);
 end;
 
-class procedure TDelphiProjectMenuManager.DoNewDataModuleClick(Sender: TObject);
+class procedure TProjectMenuManager.DoNewDataModuleClick(Sender: TObject);
 begin
   DoAddNewFile(FileDescNameDatamodule);
 end;
 
-class procedure TDelphiProjectMenuManager.DoNewUnitClick(Sender: TObject);
+class procedure TProjectMenuManager.DoNewUnitClick(Sender: TObject);
 begin
   DoAddNewFile(FileDescNamePascalUnit);
 end;
 
-class procedure TDelphiProjectMenuManager.DoNewOtherClick(Sender: TObject);
+class procedure TProjectMenuManager.DoNewOtherClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecNew);
 end;
 
-class procedure TDelphiProjectMenuManager.DoRemoveFileClick(Sender: TObject);
+class procedure TProjectMenuManager.DoRemoveFileClick(Sender: TObject);
 var
   Prj: TLazProject;
   Items: TStringList;
@@ -834,17 +834,17 @@ begin
   end;
 end;
 
-class procedure TDelphiProjectMenuManager.DoSaveClick(Sender: TObject);
+class procedure TProjectMenuManager.DoSaveClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecSaveProject);
 end;
 
-class procedure TDelphiProjectMenuManager.DoSaveAsClick(Sender: TObject);
+class procedure TProjectMenuManager.DoSaveAsClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecSaveProjectAs);
 end;
 
-class procedure TDelphiProjectMenuManager.DoRenameClick(Sender: TObject);
+class procedure TProjectMenuManager.DoRenameClick(Sender: TObject);
 begin
   ExecuteIDECommand(nil, ecSaveProjectAs);
 end;
