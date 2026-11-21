@@ -1,0 +1,9 @@
+lib/
+backup/
+*.compiled
+*.o
+*.ppu
+*.a
+*.or
+*.bak
+*.~*
